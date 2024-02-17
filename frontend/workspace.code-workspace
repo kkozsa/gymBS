@@ -1,0 +1,15 @@
+{
+  "folders": [
+	{
+		"name": "DBS-Ecommerce",
+		"path": "."
+	},
+	{
+		"name": "Girls-Gym",
+		"path": "../Girls-Gym"
+	}
+],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "DBS-Ecommerce"
+  }
+}
