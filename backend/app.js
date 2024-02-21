@@ -20,6 +20,14 @@ const db = mysql.createConnection({
     database: 'gymbs'
 });
 
+// Check if database connected                              // Check user, password, database in line 18, 19 and 20
+db.connect((err) => {
+    if (err) {
+        console.error('Error connecting to database:', err);
+        return;
+    }
+    console.log('Connected to database successfully');
+});
 
 app.post('/register', (req, res) => {
     const {username, email, password} = req.body;
@@ -35,8 +43,7 @@ app.post('/register', (req, res) => {
 
 
 app.use((req, res) => {
-    res.status(404);
-    res.send('<h1>Error 404: Resource not found</h1>')
+    res.status(404).send('<h1>Error 404: Resource not found</h1>')
 })
 
 app.listen(5555, ()=> {

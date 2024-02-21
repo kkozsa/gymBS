@@ -271,8 +271,8 @@ function signUpIn() {
     }
   };
 
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
+  form.addEventListener("submit", () => {     //  (e) removed
+  //  e.preventDefault();                     // removed
 
     if (form.classList[1] === "sign-up") {
       checkRequiredFields([username, email, password, password2]);
