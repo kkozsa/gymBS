@@ -20,7 +20,7 @@ const db = mysql.createConnection({
     database: 'gymbs'
 });
 
-// Check if database connected                              // Check user, password, database in line 18, 19 and 20
+// Check if database connected                              
 db.connect((err) => {
     if (err) {
         console.error('Error connecting to database:', err);
@@ -30,16 +30,49 @@ db.connect((err) => {
 });
 
 app.post('/register', (req, res) => {
-    const {username, email, password} = req.body;
-    db.query('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', [username, email, password], (err, result) => {
-        if (err) {
-            console.error('Error inserting data into database:', err);
-            return res.status(500).send(err);
+    const { username, email, password, password2 } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).send('Email and password are required');
+    }
+
+    // Determine whether it's a registration or login attempt based on presence of username
+    if (username) {
+        // Signup logic
+        if (!password2) {
+            return res.status(400).send('Confirmation password is required');
         }
-        console.log('User registered successfully:', result);
-        res.status(200).send('User registered successfully');
-    });
-})
+        if (password !== password2) {
+            return res.status(400).send('Passwords do not match');
+        }
+        // Add more validation
+        
+        db.query('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', [username, email, password], (err, result) => {
+            if (err) {
+                console.error('Error inserting data into database:', err);
+                return res.status(500).send('Internal Server Error');
+            }
+            console.log('User registered successfully:', result);
+            res.status(200).send('User registered successfully');
+        });
+    } else {
+        // Signin logic
+        db.query('SELECT * FROM users WHERE email = ? AND password = ?', [email, password], (err, results) => {
+            if (err) {
+                console.error('Error querying database:', err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            if (results.length === 0) {
+                return res.status(401).send('Invalid email or password');
+            }
+
+            console.log('User signed in successfully:', results[0]);
+            res.status(200).send('User signed in successfully');
+        });
+    }
+});
+
 
 
 app.use((req, res) => {
