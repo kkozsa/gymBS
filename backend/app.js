@@ -2,8 +2,6 @@ const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 
-//app.use(express.json());
-
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -36,7 +34,7 @@ app.post('/register', (req, res) => {
         return res.status(400).send('Email and password are required');
     }
 
-    // Determine whether it's a registration or login attempt based on presence of username
+    // Check if it is a registration or login attempt
     if (username) {
         // Signup logic
         if (!password2) {
@@ -45,8 +43,7 @@ app.post('/register', (req, res) => {
         if (password !== password2) {
             return res.status(400).send('Passwords do not match');
         }
-        // Add more validation
-        
+                
         db.query('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', [username, email, password], (err, result) => {
             if (err) {
                 console.error('Error inserting data into database:', err);
