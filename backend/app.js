@@ -36,7 +36,9 @@ app.post('/register', (req, res) => {
 
     // Check if it is a registration or login attempt
     if (username) {
+        
         // Signup logic
+
         if (!password2) {
             return res.status(400).send('Confirmation password is required');
         }
@@ -53,7 +55,9 @@ app.post('/register', (req, res) => {
             res.status(200).send('User registered successfully');
         });
     } else {
+
         // Signin logic
+
         db.query('SELECT * FROM users WHERE email = ? AND password = ?', [email, password], (err, results) => {
             if (err) {
                 console.error('Error querying database:', err);
@@ -69,8 +73,6 @@ app.post('/register', (req, res) => {
         });
     }
 });
-
-
 
 app.use((req, res) => {
     res.status(404).send('<h1>Error 404: Resource not found</h1>')
